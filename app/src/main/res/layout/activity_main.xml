@@ -6,31 +6,53 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.157"
-            app:layout_constraintHorizontal_bias="0.498" />
-
     <Button
             android:text="Set an Alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/start_button"
-            tools:layout_editor_absoluteY="217dp"
-            tools:layout_editor_absoluteX="132dp" />
+            android:id="@+id/alarmButton"
+            tools:layout_editor_absoluteX="132dp"
+            tools:layout_editor_absoluteY="249dp" />
 
     <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/alarmPrompt"
-            tools:layout_editor_absoluteY="276dp"
+            tools:layout_editor_absoluteY="43dp"
             tools:layout_editor_absoluteX="176dp" />
+
+    <Button
+            android:text="Search for contact"
+            android:layout_width="161dp"
+            android:layout_height="56dp"
+            android:id="@+id/contactButton"
+            tools:layout_editor_absoluteY="348dp"
+            tools:layout_editor_absoluteX="16dp" />
+
+    <EditText
+            android:layout_width="162dp"
+            android:layout_height="43dp"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/editTextPhone"
+            tools:layout_editor_absoluteY="355dp"
+            tools:layout_editor_absoluteX="233dp" />
+
+    <Button
+            android:text="Redial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button2"
+            tools:layout_editor_absoluteY="451dp"
+            tools:layout_editor_absoluteX="161dp" />
+
+    <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button3"
+            tools:layout_editor_absoluteY="556dp"
+            tools:layout_editor_absoluteX="157dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
