@@ -1,25 +1,16 @@
 package com.example.commontaskslite;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.annotation.SuppressLint;
-import android.os.Build;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.ContactsContract;
 import android.view.View.OnClickListener;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TimePicker;
 import android.widget.Button;
 import android.widget.TextView;
@@ -87,13 +78,4 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
     }
-
-
 }
-
-//    private void setContact(int REQUEST_SELECT_PHONE_NUMBER) {
-//        editTextPhone
-//        Intent intent = Intent(Intent.ACTION_PICK);
-//        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-//        startActivityForResult(intent, REQUEST_SELECT_PHONE_NUMBER);
-//    }

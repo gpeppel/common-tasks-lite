@@ -6,6 +6,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -23,7 +24,10 @@ public class ContactsFragment extends Fragment implements
 
     @SuppressLint("InlinedApi")
     private final static String[] FROM_COLUMNS = {
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+            Build.VERSION.SDK_INT
+                    >= Build.VERSION_CODES.HONEYCOMB ?
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                    ContactsContract.Contacts.DISPLAY_NAME
     };
 
     private final static int[] TO_IDS = {
@@ -48,6 +52,7 @@ public class ContactsFragment extends Fragment implements
                 container, false);
     }
 
+    @SuppressLint("ResourceType")
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         contactsList.setOnItemClickListener(this);
@@ -87,7 +92,7 @@ public class ContactsFragment extends Fragment implements
     public void onItemClick(
             AdapterView<?> parent, View item, int position, long rowID) {
         // Get the Cursor
-        Cursor cursor = parent.getAdapter().getCursor();
+        Cursor cursor = (Cursor) parent.getAdapter();
         // Move to the selected contact
         cursor.moveToPosition(position);
         // Get the _ID value
@@ -95,7 +100,7 @@ public class ContactsFragment extends Fragment implements
         // Get the selected LOOKUP KEY
         contactKey = cursor.getString(CONTACT_KEY_INDEX);
         // Create the contact's content Uri
-        contactUri = ContactsContract.Contacts.getLookupUri(contactId, mContactKey);
+        contactUri = ContactsContract.Contacts.getLookupUri(contactId, contactKey);
         /*
          * You can use contactUri as the content URI for retrieving
          * the details for a contact.
@@ -151,6 +156,4 @@ public class ContactsFragment extends Fragment implements
         cursorAdapter.swapCursor(null);
 
     }
-
-
 }
