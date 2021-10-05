@@ -6,89 +6,54 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <Button
-            android:text="Set an Alarm"
-            android:layout_width="153dp"
-            android:layout_height="48dp"
-            android:id="@+id/alarmButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="226dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginBottom="46dp"
-            app:layout_constraintBottom_toTopOf="@+id/addressButton"
-            android:layout_marginTop="78dp"
-            app:layout_constraintTop_toBottomOf="@+id/searchContact" />
-
-    <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/alarmPrompt"
-            android:layout_marginEnd="80dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="89dp"
-            app:layout_constraintStart_toEndOf="@+id/alarmButton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="444dp" />
+    <EditText
+            android:id="@+id/searchContact"
+            android:layout_width="347dp"
+            android:layout_height="55"
+            android:inputType="text"
+            android:imeOptions="actionSend"
+            android:text="Search"
+            tools:layout_editor_absoluteY="73dp"
+            tools:layout_editor_absoluteX="29dp" />
 
     <Button
             android:text="Search for contact"
             android:layout_width="347dp"
             android:layout_height="52dp"
             android:id="@+id/contactButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="105dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/searchContact" />
-
-    <EditText
-            android:id="@+id/searchContact"
-            android:layout_width="344dp"
-            android:layout_height="73dp"
-            android:inputType="text"
-            android:imeOptions="actionSend"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="32dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/contactButton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Search" />
+            tools:layout_editor_absoluteY="140dp"
+            tools:layout_editor_absoluteX="29dp" />
 
     <Button
             android:text="Redial"
             android:layout_width="153dp"
             android:layout_height="48dp"
             android:id="@+id/redialButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="226dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addressButton"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="300dp" />
+            tools:layout_editor_absoluteY="473dp"
+            tools:layout_editor_absoluteX="129dp" />
+
+    <Button
+            android:text="Set an Alarm"
+            android:layout_width="153dp"
+            android:layout_height="48dp"
+            android:id="@+id/alarmButton"
+            tools:layout_editor_absoluteY="314dp"
+            tools:layout_editor_absoluteX="129dp" />
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/alarmPrompt"
+            tools:layout_editor_absoluteY="275dp"
+            tools:layout_editor_absoluteX="176dp" />
 
     <Button
             android:text="Show Address"
             android:layout_width="153dp"
             android:layout_height="48dp"
             android:id="@+id/addressButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="226dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginBottom="46dp"
-            app:layout_constraintBottom_toTopOf="@+id/redialButton"
-            app:layout_constraintTop_toBottomOf="@+id/alarmButton" />
+            tools:layout_editor_absoluteY="391dp"
+            tools:layout_editor_absoluteX="129dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

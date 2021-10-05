@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         textAlarmPrompt = (TextView) findViewById(R.id.alarmPrompt);
         builder = new AlertDialog.Builder(this);
-
+        
+        buttonStartSetDialog = (Button) findViewById(R.id.alarmButton);
         buttonStartSetDialog.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
