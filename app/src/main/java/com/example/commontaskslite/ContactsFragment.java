@@ -1,5 +1,10 @@
 package com.example.commontaskslite;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.widget.Toast;
+
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.LoaderManager;
@@ -24,10 +29,7 @@ public class ContactsFragment extends Fragment implements
 
     @SuppressLint("InlinedApi")
     private final static String[] FROM_COLUMNS = {
-            Build.VERSION.SDK_INT
-                    >= Build.VERSION_CODES.HONEYCOMB ?
-                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
-                    ContactsContract.Contacts.DISPLAY_NAME
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
     };
 
     private final static int[] TO_IDS = {
@@ -157,3 +159,4 @@ public class ContactsFragment extends Fragment implements
 
     }
 }
+

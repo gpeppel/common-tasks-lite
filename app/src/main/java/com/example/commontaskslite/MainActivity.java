@@ -22,8 +22,10 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog.Builder builder;
     Button buttonStartSetDialog;
+//    Button contactButton;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
+//    ContactsFragment contactsFragment;
 
     final static int RQS_1 = 1;
 
@@ -33,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textAlarmPrompt = (TextView) findViewById(R.id.alarmPrompt);
-
         builder = new AlertDialog.Builder(this);
+
         buttonStartSetDialog.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
