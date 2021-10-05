@@ -2,9 +2,9 @@ package com.example.commontaskslite;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.os.Build;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
@@ -83,43 +83,13 @@ public class MainActivity extends AppCompatActivity {
         textAlarmPrompt.setText("ALARM SET FOR ---> " + targetCal.getTime());
 
         Intent intent = new Intent(getBaseContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
     }
 
-    public class ContactsFragment extends Fragment implements
-            LoaderManager.LoaderCallbacks<Cursor>,
-            AdapterView.OnItemClickListener {
-        /*
-         * Defines an array that contains column names to move from
-         * the Cursor to the ListView.
-         */
-        @SuppressLint("InlinedApi")
-        private final static String[] FROM_COLUMNS = {
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-        };
-        /*
-         * Defines an array that contains resource ids for the layout views
-         * that get the Cursor column contents. The id is pre-defined in
-         * the Android framework, so it is prefaced with "android.R.id"
-         */
-        private final static int[] TO_IDS = {
-                android.R.id.text1
-        };
-        // Define global mutable variables
-        // Define a ListView object
-        ListView contactsList;
-        // Define variables for the contact the user selects
-        // The contact's _ID value
-        long contactId;
-        // The contact's LOOKUP_KEY
-        String contactKey;
-        // A content URI for the selected contact
-        Uri contactUri;
-        // An adapter that binds the result Cursor to the ListView
-        private SimpleCursorAdapter cursorAdapter;
-    }
+
+}
 
 //    private void setContact(int REQUEST_SELECT_PHONE_NUMBER) {
 //        editTextPhone
@@ -127,5 +97,3 @@ public class MainActivity extends AppCompatActivity {
 //        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
 //        startActivityForResult(intent, REQUEST_SELECT_PHONE_NUMBER);
 //    }
-
-}
