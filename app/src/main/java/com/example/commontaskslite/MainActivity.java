@@ -22,10 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     AlertDialog.Builder builder;
     Button buttonStartSetDialog;
-//    Button contactButton;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
-//    ContactsFragment contactsFragment;
 
     final static int RQS_1 = 1;
 
