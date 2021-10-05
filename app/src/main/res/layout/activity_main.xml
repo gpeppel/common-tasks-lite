@@ -13,47 +13,82 @@
             android:inputType="text"
             android:imeOptions="actionSend"
             android:text="Search"
-            tools:layout_editor_absoluteY="73dp"
-            tools:layout_editor_absoluteX="29dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="76dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/contactButton" />
 
     <Button
             android:text="Search for contact"
             android:layout_width="347dp"
             android:layout_height="52dp"
             android:id="@+id/contactButton"
-            tools:layout_editor_absoluteY="140dp"
-            tools:layout_editor_absoluteX="29dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/searchContact" />
 
     <Button
             android:text="Redial"
             android:layout_width="153dp"
             android:layout_height="48dp"
             android:id="@+id/redialButton"
-            tools:layout_editor_absoluteY="473dp"
-            tools:layout_editor_absoluteX="129dp" />
+            android:layout_marginTop="19dp"
+            app:layout_constraintTop_toBottomOf="@+id/addressButton"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="129dp"
+            android:layout_marginEnd="129dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="196dp" />
 
     <Button
             android:text="Set an Alarm"
             android:layout_width="153dp"
             android:layout_height="48dp"
             android:id="@+id/alarmButton"
-            tools:layout_editor_absoluteY="314dp"
-            tools:layout_editor_absoluteX="129dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="129dp"
+            android:layout_marginEnd="129dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="45dp"
+            app:layout_constraintTop_toBottomOf="@+id/alarmPrompt"
+            android:layout_marginBottom="29dp"
+            app:layout_constraintBottom_toTopOf="@+id/addressButton" />
 
     <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/alarmPrompt"
-            tools:layout_editor_absoluteY="275dp"
-            tools:layout_editor_absoluteX="176dp" />
+            android:layout_marginTop="66dp"
+            app:layout_constraintTop_toBottomOf="@+id/contactButton"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/alarmButton"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="176dp"
+            android:layout_marginEnd="177dp"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
             android:text="Show Address"
             android:layout_width="153dp"
             android:layout_height="48dp"
             android:id="@+id/addressButton"
-            tools:layout_editor_absoluteY="391dp"
-            tools:layout_editor_absoluteX="129dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="129dp"
+            android:layout_marginEnd="129dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/alarmButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginBottom="19dp"
+            app:layout_constraintBottom_toTopOf="@+id/redialButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
