@@ -1,17 +1,12 @@
 package com.example.commontaskslite;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.view.View.OnClickListener;
 import android.app.AlarmManager;
@@ -19,7 +14,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -29,7 +23,6 @@ import android.widget.TextView;
 import android.os.Bundle;
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
 import android.widget.Toast;
 
@@ -48,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
     EditText mEdit;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
-//    ContactsFragment contactsFragment;
+    List<String> contactsList;
+
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     final static int RQS_1 = 1;
@@ -65,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
         contactsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String edit_text = mEdit.getText().toString();
+                String name = mEdit.getText().toString();
+                lstNames = (ListView) findViewById(R.id.lstnames);
+                getContact(name);
             }
         });
 
@@ -83,32 +79,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 lstNames = (ListView) findViewById(R.id.lstnames);
-                showContacts();
             }
         });
+    }
+
+    private List<String> getContact(String n) {
+        List<String> contact = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            List<String> contacts = getContactNames();
+            for (int i = 0; i <= contacts.size(); i++) {
+                String name = contacts.get(i);
+                if (n.equals(name)) {
+                    contact.add(name);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
+                    lstNames.setAdapter(adapter);
+                } else {
+                    contact.add("Sorry! " + n + " was not found in your contacts.");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
+                    lstNames.setAdapter(adapter);
+                    break;
+                }
+            }
+        }
+        return contact;
     }
 
     private void showContacts() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
         } else {
-            List<String> contacts = getContactNames();
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contacts);
-            lstNames.setAdapter(adapter);
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                showContacts();
-            } else {
-                Toast.makeText(this, "Until you grant the permission, we cannot display the names", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
@@ -125,6 +127,19 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
 
         return contacts;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showContacts();
+            } else {
+                Toast.makeText(this, "DENIED!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void openTimePickerDialog(boolean is24r) {
