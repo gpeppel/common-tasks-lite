@@ -1,16 +1,16 @@
 package com.example.commontaskslite;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.os.Build;
-import android.widget.AdapterView;
-import android.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import static android.Manifest.permission.CALL_PHONE;
+
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.view.View.OnClickListener;
 import android.app.AlarmManager;
@@ -18,21 +18,33 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TimePicker;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.Bundle;
-
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.provider.ContactsContract.Contacts;
+import android.widget.Toast;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    AlertDialog.Builder builder;
+    ListView lstNames;
+    Button redialButton;
+    TextView phoneNumber;
     Button buttonStartSetDialog;
+    Button contactsButton;
+    EditText mEdit;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
+
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
     final static int RQS_1 = 1;
 
@@ -41,9 +53,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textAlarmPrompt = (TextView) findViewById(R.id.alarmPrompt);
+        mEdit = (EditText) findViewById(R.id.edit_text);
+        contactsButton = (Button) findViewById(R.id.contact_button);
+        contactsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = mEdit.getText().toString();
+                lstNames = (ListView) findViewById(R.id.lstnames);
+                getContact(name);
+            }
+        });
 
-        builder = new AlertDialog.Builder(this);
+        textAlarmPrompt = (TextView) findViewById(R.id.alarmPrompt);
+        buttonStartSetDialog = (Button) findViewById(R.id.alarmButton);
         buttonStartSetDialog.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +73,90 @@ public class MainActivity extends AppCompatActivity {
                 openTimePickerDialog(false);
             }
         });
+
+        phoneNumber = (TextView) findViewById(R.id.redialPrompt);
+        redialButton = (Button) findViewById(R.id.redial_button);
+        redialButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lastCalledNumber = CallLog.Calls.getLastOutgoingCall(getApplicationContext());
+                phoneNumber.setText(lastCalledNumber);
+            }
+        });
+
+        phoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String lastCalledNumber = phoneNumber.getText().toString();
+                Intent redialCall = new Intent(Intent.ACTION_CALL);
+                redialCall.setData(Uri.parse("tel:" + lastCalledNumber));
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(redialCall);
+                } else {
+                    requestPermissions(new String[]{CALL_PHONE}, 1);
+                }
+            }
+        });
+    }
+
+    private List<String> getContact(String n) {
+        List<String> contact = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            List<String> contacts = getContactNames();
+            for (int i = 0; i <= contacts.size(); i++) {
+                String name = contacts.get(i);
+                if (n.equals(name)) {
+                    contact.add(name);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
+                    lstNames.setAdapter(adapter);
+                    break;
+                } else {
+                    contact.add("Sorry! " + n + " was not found in your contacts.");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
+                    lstNames.setAdapter(adapter);
+                    break;
+                }
+            }
+        }
+        return contact;
+    }
+
+    private void showContacts() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+
+        }
+    }
+
+    private List<String> getContactNames() {
+        List<String> contacts = new ArrayList<>();
+        ContentResolver cr = getContentResolver();
+        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
+                contacts.add(name);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return contacts;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showContacts();
+            } else {
+                Toast.makeText(this, "DENIED!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void openTimePickerDialog(boolean is24r) {
@@ -83,49 +189,8 @@ public class MainActivity extends AppCompatActivity {
         textAlarmPrompt.setText("ALARM SET FOR ---> " + targetCal.getTime());
 
         Intent intent = new Intent(getBaseContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), RQS_1, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
     }
-
-    public class ContactsFragment extends Fragment implements
-            LoaderManager.LoaderCallbacks<Cursor>,
-            AdapterView.OnItemClickListener {
-        /*
-         * Defines an array that contains column names to move from
-         * the Cursor to the ListView.
-         */
-        @SuppressLint("InlinedApi")
-        private final static String[] FROM_COLUMNS = {
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-        };
-        /*
-         * Defines an array that contains resource ids for the layout views
-         * that get the Cursor column contents. The id is pre-defined in
-         * the Android framework, so it is prefaced with "android.R.id"
-         */
-        private final static int[] TO_IDS = {
-                android.R.id.text1
-        };
-        // Define global mutable variables
-        // Define a ListView object
-        ListView contactsList;
-        // Define variables for the contact the user selects
-        // The contact's _ID value
-        long contactId;
-        // The contact's LOOKUP_KEY
-        String contactKey;
-        // A content URI for the selected contact
-        Uri contactUri;
-        // An adapter that binds the result Cursor to the ListView
-        private SimpleCursorAdapter cursorAdapter;
-    }
-
-//    private void setContact(int REQUEST_SELECT_PHONE_NUMBER) {
-//        editTextPhone
-//        Intent intent = Intent(Intent.ACTION_PICK);
-//        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-//        startActivityForResult(intent, REQUEST_SELECT_PHONE_NUMBER);
-//    }
-
 }
