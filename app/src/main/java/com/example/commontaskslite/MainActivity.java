@@ -6,7 +6,9 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.view.View.OnClickListener;
 import android.app.AlarmManager;
@@ -34,15 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
     ListView lstNames;
     Button redialButton;
-    TextView number;
+    TextView phoneNumber;
     EditText calledNumber;
     Button buttonStartSetDialog;
     Button contactsButton;
     EditText mEdit;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
-    List<String> contactsList;
-
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     final static int RQS_1 = 1;
@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        textAlarmPrompt = (TextView) findViewById(R.id.alarmPrompt);
 
         mEdit = (EditText) findViewById(R.id.edit_text);
         contactsButton = (Button) findViewById(R.id.contact_button);
@@ -65,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        textAlarmPrompt = (TextView) findViewById(R.id.alarmPrompt);
         buttonStartSetDialog = (Button) findViewById(R.id.alarmButton);
         buttonStartSetDialog.setOnClickListener(new OnClickListener() {
             @Override
@@ -74,13 +73,36 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        phoneNumber = (TextView) findViewById(R.id.redialPrompt);
         redialButton = (Button) findViewById(R.id.redial_button);
         redialButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                lstNames = (ListView) findViewById(R.id.lstnames);
+                String lastCalledNumber = CallLog.Calls.getLastOutgoingCall(getApplicationContext());
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + lastCalledNumber));
+                startActivity(callIntent);
+                phoneNumber.setText(lastCalledNumber);
             }
         });
+
+        phoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent redialCall = new Intent(Intent.ACTION_CALL);
+//                String lastCalledNumber = phoneNumber.getText().toString();
+                redialCall.setData(Uri.parse("Phone number: " + lastCalledNumber));
+                startActivity(redialCall);
+            }
+        });
+
+    }
+
+    String lastCalledNumber;
+    @Override
+    public void onResume() {
+        super.onResume();
+        lastCalledNumber = CallLog.Calls.getLastOutgoingCall(this);
     }
 
     private List<String> getContact(String n) {
@@ -95,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     contact.add(name);
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
                     lstNames.setAdapter(adapter);
+                    break;
                 } else {
                     contact.add("Sorry! " + n + " was not found in your contacts.");
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
