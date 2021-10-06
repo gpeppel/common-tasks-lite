@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     TextView phoneNumber;
     Button buttonStartSetDialog;
     Button contactsButton;
-    Button smsButton;
-    Button callContact;
     EditText mEdit;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
@@ -58,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         lstNames = (ListView) findViewById(R.id.lstnames);
         mEdit = (EditText) findViewById(R.id.edit_text);
         contactsButton = (Button) findViewById(R.id.contact_button);
-        smsButton = (Button) findViewById(R.id.sms_button);
-        callContact = (Button) findViewById(R.id.call_contact_button);
         contactsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
