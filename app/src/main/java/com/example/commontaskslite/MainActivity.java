@@ -32,6 +32,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     Button contactsButton;
     Button smsButton;
     Button callContact;
+    Button addressButton;
     EditText mEdit;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
@@ -54,6 +56,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        addressButton = (Button) findViewById(R.id.addressButton);
+        addressButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float latitude = (float) 40.7423;
+                float longitude = (float) 74.1793;
+                String locationName = "NJIT";
+                String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude + " (" + locationName + ")";
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                if (mapIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
+                    getApplicationContext().startActivity(mapIntent);}
+            }
+        });
 
         lstNames = (ListView) findViewById(R.id.lstnames);
         mEdit = (EditText) findViewById(R.id.edit_text);
