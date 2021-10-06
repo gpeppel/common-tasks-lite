@@ -9,6 +9,14 @@
 
 
     <Button
+            android:text="text"
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:id="@+id/sms_button"
+            tools:layout_editor_absoluteY="358dp"
+            tools:layout_editor_absoluteX="330dp" />
+
+    <Button
             android:text="Set an Alarm"
             android:layout_width="153dp"
             android:layout_height="48dp"
@@ -80,7 +88,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.699" />
+            app:layout_constraintVertical_bias="0.928" />
 
     <ListView
             android:layout_width="400dp"
@@ -88,7 +96,7 @@
             android:id="@+id/lstnames"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.54"
+            app:layout_constraintVertical_bias="0.63"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.454" />
@@ -103,5 +111,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.498" />
+
+    <Button
+            android:text="call"
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:id="@+id/call_contact_button"
+            tools:layout_editor_absoluteY="358dp"
+            tools:layout_editor_absoluteX="255dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
