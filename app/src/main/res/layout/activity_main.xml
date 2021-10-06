@@ -4,62 +4,59 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity"
+        android:focusableInTouchMode="true">
 
-    <EditText
-            android:id="@+id/searchContact"
-            android:layout_width="343dp"
-            android:layout_height="49dp"
-            android:inputType="text"
-            android:imeOptions="actionSend"
-            android:text="Search"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="500dp"
-            android:layout_marginTop="50dp" />
-
-    <Button
-            android:text="Search for contact"
-            android:layout_width="347dp"
-            android:layout_height="52dp"
-            android:id="@+id/contactButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="400dp"
-            android:layout_marginTop="100dp" />
-
-    <Button
-            android:text="Redial"
-            android:layout_width="153dp"
-            android:layout_height="48dp"
-            android:id="@+id/redialButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="129dp"
-            android:layout_marginEnd="129dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="300dp" />
 
     <Button
             android:text="Set an Alarm"
             android:layout_width="153dp"
             android:layout_height="48dp"
             android:id="@+id/alarmButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="129dp"
-            android:layout_marginEnd="129dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.147"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="50dp"
+            app:layout_constraintEnd_toStartOf="@+id/redial_button"
+            android:layout_marginEnd="5dp" />
+
+    <Button
+            android:text="Search for contact"
+            android:layout_width="347dp"
+            android:layout_height="52dp"
+            android:id="@+id/contact_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.409" />
+
+    <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="343dp"
+            android:layout_height="49dp"
+            android:inputType="text"
+            android:imeOptions="actionSend"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.47"
+            app:layout_constraintVertical_bias="0.324" />
+
+    <Button
+            android:text="Redial"
+            android:layout_width="153dp"
+            android:layout_height="48dp"
+            android:id="@+id/redial_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.147"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@+id/alarmButton" />
 
     <TextView
             android:text="TextView"
@@ -67,22 +64,33 @@
             android:layout_height="wrap_content"
             android:id="@+id/alarmPrompt"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.424"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginStart="176dp"
+            android:layout_marginEnd="177dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.056" />
 
     <Button
             android:text="Show Address"
             android:layout_width="153dp"
             android:layout_height="48dp"
             android:id="@+id/addressButton"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="129dp"
-            android:layout_marginEnd="129dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="150dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.232" />
+
+    <ListView
+            android:layout_width="412dp"
+            android:layout_height="348dp"
+            android:id="@+id/lstnames"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

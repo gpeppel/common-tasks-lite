@@ -1,30 +1,56 @@
 package com.example.commontaskslite;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.CallLog;
+import android.provider.ContactsContract;
 import android.view.View.OnClickListener;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.Bundle;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.provider.ContactsContract.Contacts;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    AlertDialog.Builder builder;
+    ListView lstNames;
+    Button redialButton;
+    TextView number;
+    EditText calledNumber;
     Button buttonStartSetDialog;
+    Button contactsButton;
+    EditText mEdit;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
+//    ContactsFragment contactsFragment;
 
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     final static int RQS_1 = 1;
 
     @Override
@@ -33,8 +59,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textAlarmPrompt = (TextView) findViewById(R.id.alarmPrompt);
-        builder = new AlertDialog.Builder(this);
-        
+
+        mEdit = (EditText) findViewById(R.id.edit_text);
+        contactsButton = (Button) findViewById(R.id.contact_button);
+        contactsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String edit_text = mEdit.getText().toString();
+            }
+        });
+
         buttonStartSetDialog = (Button) findViewById(R.id.alarmButton);
         buttonStartSetDialog.setOnClickListener(new OnClickListener() {
             @Override
@@ -43,6 +77,54 @@ public class MainActivity extends AppCompatActivity {
                 openTimePickerDialog(false);
             }
         });
+
+        redialButton = (Button) findViewById(R.id.redial_button);
+        redialButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lstNames = (ListView) findViewById(R.id.lstnames);
+                showContacts();
+            }
+        });
+    }
+
+    private void showContacts() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            List<String> contacts = getContactNames();
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contacts);
+            lstNames.setAdapter(adapter);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted
+                showContacts();
+            } else {
+                Toast.makeText(this, "Until you grant the permission, we cannot display the names", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private List<String> getContactNames() {
+        List<String> contacts = new ArrayList<>();
+        ContentResolver cr = getContentResolver();
+        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
+                contacts.add(name);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return contacts;
     }
 
     private void openTimePickerDialog(boolean is24r) {
