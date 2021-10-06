@@ -43,7 +43,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.47"
-            app:layout_constraintVertical_bias="0.324" />
+            app:layout_constraintVertical_bias="0.324"
+            tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
             android:text="Redial"

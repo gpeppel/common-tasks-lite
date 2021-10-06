@@ -1,6 +1,8 @@
 package com.example.commontaskslite;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import static android.Manifest.permission.CALL_PHONE;
 
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -27,7 +29,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.provider.ContactsContract.Contacts;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     ListView lstNames;
     Button redialButton;
     TextView phoneNumber;
-    EditText calledNumber;
     Button buttonStartSetDialog;
     Button contactsButton;
     EditText mEdit;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     TimePickerDialog timePickerDialog;
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+
     final static int RQS_1 = 1;
 
     @Override
@@ -79,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String lastCalledNumber = CallLog.Calls.getLastOutgoingCall(getApplicationContext());
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + lastCalledNumber));
-                startActivity(callIntent);
                 phoneNumber.setText(lastCalledNumber);
             }
         });
@@ -89,20 +87,16 @@ public class MainActivity extends AppCompatActivity {
         phoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String lastCalledNumber = phoneNumber.getText().toString();
                 Intent redialCall = new Intent(Intent.ACTION_CALL);
-//                String lastCalledNumber = phoneNumber.getText().toString();
-                redialCall.setData(Uri.parse("Phone number: " + lastCalledNumber));
-                startActivity(redialCall);
+                redialCall.setData(Uri.parse("tel:" + lastCalledNumber));
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(redialCall);
+                } else {
+                    requestPermissions(new String[]{CALL_PHONE}, 1);
+                }
             }
         });
-
-    }
-
-    String lastCalledNumber;
-    @Override
-    public void onResume() {
-        super.onResume();
-        lastCalledNumber = CallLog.Calls.getLastOutgoingCall(this);
     }
 
     private List<String> getContact(String n) {
