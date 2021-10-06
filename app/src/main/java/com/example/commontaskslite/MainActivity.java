@@ -2,6 +2,7 @@ package com.example.commontaskslite;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
 import static android.Manifest.permission.CALL_PHONE;
 
 import android.app.TimePickerDialog;
@@ -21,16 +22,18 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.Bundle;
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.provider.ContactsContract.Contacts;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,8 +47,12 @@ public class MainActivity extends AppCompatActivity {
     EditText mEdit;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
+    /*  contact definitions  */
+    TextView nText;
+    TextView nPhone;
+    Switch toggleSMS;
 
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 99;
 
     final static int RQS_1 = 1;
 
@@ -64,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
                 String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude + " (" + locationName + ")";
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
                 if (mapIntent.resolveActivity(getApplicationContext().getPackageManager()) != null) {
-                    getApplicationContext().startActivity(mapIntent);}
+                    getApplicationContext().startActivity(mapIntent);
+                }
             }
         });
 
-        lstNames = (ListView) findViewById(R.id.lstnames);
-        mEdit = (EditText) findViewById(R.id.edit_text);
+        nText = (TextView) findViewById(R.id.nText);
+        nPhone = (TextView) findViewById(R.id.nPhone);
+        toggleSMS = (Switch) findViewById((R.id.toggleSMS));
         contactsButton = (Button) findViewById(R.id.contact_button);
         contactsButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -148,12 +157,25 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> getContactNames() {
         List<String> contacts = new ArrayList<>();
+        Hashtable<TextView, TextView> my_dict = new Hashtable<>();
         ContentResolver cr = getContentResolver();
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
-                String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
-                contacts.add(name);
+                String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                String hasNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                String num = "";
+                String name = "";
+                if (Integer.valueOf(hasNumber) == 1) {
+                    Cursor c = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                    num = cursor.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    name = cursor.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    nText.setText("" + name);
+                    nPhone.setText("" + num);
+                    my_dict.put(nText, nPhone);
+                    contacts.add(my_dict);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();

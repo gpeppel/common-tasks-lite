@@ -82,17 +82,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="0.928" />
 
-    <ListView
-            android:layout_width="400dp"
-            android:layout_height="50dp"
-            android:id="@+id/lstnames"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.513"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.454" />
-
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,5 +92,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.498" />
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nText"
+            tools:layout_editor_absoluteY="372dp"
+            tools:layout_editor_absoluteX="32dp" />
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nPhone"
+            tools:layout_editor_absoluteY="372dp"
+            tools:layout_editor_absoluteX="176dp" />
+
+    <Switch
+            android:text="Toggle SMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleSMS"
+            tools:layout_editor_absoluteY="337dp"
+            tools:layout_editor_absoluteX="257dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
