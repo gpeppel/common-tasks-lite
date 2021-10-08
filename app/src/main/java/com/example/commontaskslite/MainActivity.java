@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,10 +29,8 @@ import android.os.Bundle;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Hashtable;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,13 +41,11 @@ public class MainActivity extends AppCompatActivity {
     Button buttonStartSetDialog;
     Button contactsButton;
     Button addressButton;
-    EditText mEdit;
+    EditText edit_text;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
-    /*  contact definitions  */
     TextView nText;
     TextView nPhone;
-    Switch toggleSMS;
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 99;
 
@@ -76,14 +71,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        lstNames = (ListView) findViewById(R.id.lstnames);
+        edit_text = (EditText) findViewById(R.id.edit_text);
         nText = (TextView) findViewById(R.id.nText);
         nPhone = (TextView) findViewById(R.id.nPhone);
-        toggleSMS = (Switch) findViewById((R.id.toggleSMS));
         contactsButton = (Button) findViewById(R.id.contact_button);
         contactsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = mEdit.getText().toString();
+                String name = edit_text.getText().toString();
                 getContact(name);
             }
         });
@@ -124,27 +120,63 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<String> getContact(String n) {
-        List<String> contact = new ArrayList<>();
+        List<String> c = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
         } else {
-            List<String> contacts = getContactNames();
-            for (int i = 0; i <= contacts.size(); i++) {
-                String name = contacts.get(i);
-                if (n.equals(name)) {
-                    contact.add(name);
+            List<List> contacts = getContacts();
+            int size = contacts.size();
+            for (int q = 0; q < contacts.size(); q++) {
+                List<String> contact = new ArrayList<>();
+                contact = contacts.get(q);
+                if (contact.contains(n)) {
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
                     lstNames.setAdapter(adapter);
-                    break;
-                } else {
-                    contact.add("Sorry! " + n + " was not found in your contacts.");
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contact);
-                    lstNames.setAdapter(adapter);
-                    break;
+                    return contact;
+                }
+            }
+            c.add("Sorry! " + n + " was not found in your contacts.");
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, c);
+            lstNames.setAdapter(adapter);
+        }
+        return c;
+    }
+
+    private List<List> getContacts() {
+        ContentResolver contentResolver = getContentResolver();
+        String contactId = null;
+        String displayName = null;
+        List<List> contacts = new ArrayList<>();
+        Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+                if (hasPhoneNumber > 0) {
+
+                    List<String> contact = new ArrayList<>();
+                    contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    contact.add(contactId);
+                    contact.add(displayName);
+
+                    Cursor pCursor = getContentResolver().query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            new String[]{contactId},
+                            null);
+
+                    if (pCursor.moveToNext()) {
+                        String phoneNumber = pCursor.getString(pCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        contact.add(phoneNumber);
+                    }
+                    pCursor.close();
+                    contacts.add(contact);
                 }
             }
         }
-        return contact;
+        cursor.close();
+        return contacts;
     }
 
     private void showContacts() {
@@ -153,33 +185,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
         }
-    }
-
-    private List<String> getContactNames() {
-        List<String> contacts = new ArrayList<>();
-        Hashtable<String, String> my_dict = new Hashtable<>();
-        ContentResolver cr = getContentResolver();
-        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String hasNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-                String num = "";
-                String name = "";
-                if (Integer.valueOf(hasNumber) == 1) {
-                    Cursor c = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                    num = cursor.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    name = cursor.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-//                    nText.setText("" + name);
-//                    nPhone.setText("" + num);
-                    my_dict.put(name, num);
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        return contacts;
     }
 
     @Override
