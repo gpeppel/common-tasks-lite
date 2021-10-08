@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
     EditText edit_text;
     TextView textAlarmPrompt;
     TimePickerDialog timePickerDialog;
-    TextView nText;
-    TextView nPhone;
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 99;
 
@@ -73,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         lstNames = (ListView) findViewById(R.id.lstnames);
         edit_text = (EditText) findViewById(R.id.edit_text);
-        nText = (TextView) findViewById(R.id.nText);
-        nPhone = (TextView) findViewById(R.id.nPhone);
         contactsButton = (Button) findViewById(R.id.contact_button);
         contactsButton.setOnClickListener(new OnClickListener() {
             @Override
