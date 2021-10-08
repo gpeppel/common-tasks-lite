@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> getContactNames() {
         List<String> contacts = new ArrayList<>();
-        Hashtable<TextView, TextView> my_dict = new Hashtable<>();
+        Hashtable<String, String> my_dict = new Hashtable<>();
         ContentResolver cr = getContentResolver();
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -171,10 +171,9 @@ public class MainActivity extends AppCompatActivity {
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
                     num = cursor.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     name = cursor.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    nText.setText("" + name);
-                    nPhone.setText("" + num);
-                    my_dict.put(nText, nPhone);
-                    contacts.add(my_dict);
+//                    nText.setText("" + name);
+//                    nPhone.setText("" + num);
+                    my_dict.put(name, num);
                 }
             } while (cursor.moveToNext());
         }
