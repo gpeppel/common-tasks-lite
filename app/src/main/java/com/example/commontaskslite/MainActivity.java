@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.READ_CALL_LOG;
 
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     TimePickerDialog timePickerDialog;
 
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 99;
+    private static final int PERMISSIONS_REQUEST_READ_CALL_LOG = 99;
 
     final static int RQS_1 = 1;
 
@@ -95,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
         redialButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String lastCalledNumber = CallLog.Calls.getLastOutgoingCall(getApplicationContext());
-                phoneNumber.setText(lastCalledNumber);
+                phoneNumber.setText(getCallLog());
             }
         });
 
@@ -113,6 +114,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String getCallLog() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, PERMISSIONS_REQUEST_READ_CALL_LOG);
+        }
+        String lastCalledNumber = CallLog.Calls.getLastOutgoingCall(getApplicationContext());
+        return lastCalledNumber;
     }
 
     private List<String> getContact(String n) {
